@@ -51,6 +51,7 @@ def plot_curve(log_dicts, args):
         for j, metric in enumerate(metrics):
             print(f'plot curve of {args.json_logs[i]}, metric is {metric}')
             if metric not in log_dict[epochs[0]]:
+                print(log_dict[epochs[0]])
                 raise KeyError(
                     f'{args.json_logs[i]} does not contain metric {metric}')
             xs = []

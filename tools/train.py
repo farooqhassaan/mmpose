@@ -26,7 +26,7 @@ def parse_args():
         help='enable automatic-mixed-precision training')
     parser.add_argument(
         '--no-validate',
-        action='store_true',
+        action='store_false',
         help='whether not to evaluate the checkpoint during training')
     parser.add_argument(
         '--auto-scale-lr',

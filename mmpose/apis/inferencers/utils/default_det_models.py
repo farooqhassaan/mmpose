@@ -8,11 +8,17 @@ mmpose_path = get_installed_path(MODULE2PACKAGE['mmpose'])
 
 default_det_models = dict(
     human=dict(
+        # model=osp.join(
+        #     mmpose_path, '.mim', 'demo/mmdetection_cfg/'
+        #     'rtmdet_m_640-8xb32_coco-person.py'),
+        # weights='https://download.openmmlab.com/mmpose/v1/projects/'
+        # 'rtmposev1/rtmdet_m_8xb32-100e_coco-obj365-person-235e8209.pth',
+        # cat_ids=(0, )),
         model=osp.join(
             mmpose_path, '.mim', 'demo/mmdetection_cfg/'
-            'rtmdet_m_640-8xb32_coco-person.py'),
-        weights='https://download.openmmlab.com/mmpose/v1/projects/'
-        'rtmposev1/rtmdet_m_8xb32-100e_coco-obj365-person-235e8209.pth',
+            'detr_r50_8xb2-150e_coco.py'),
+        weights='https://download.openmmlab.com/mmdetection/v3.0/'
+                'detr/detr_r50_8xb2-150e_coco/detr_r50_8xb2-150e_coco_20221023_153551-436d03e8.pth',
         cat_ids=(0, )),
     face=dict(
         model=osp.join(mmpose_path, '.mim',

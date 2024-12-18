@@ -2,6 +2,7 @@
 import logging
 import mimetypes
 import os
+import glob
 import time
 from argparse import ArgumentParser
 
@@ -81,8 +82,9 @@ def main():
     parser.add_argument('det_checkpoint', help='Checkpoint file for detection')
     parser.add_argument('pose_config', help='Config file for pose')
     parser.add_argument('pose_checkpoint', help='Checkpoint file for pose')
+
     parser.add_argument(
-        '--input', type=str, default='', help='Image/Video file')
+        '--input', type=str, default='webcam', help='Image/Video file')
     parser.add_argument(
         '--show',
         action='store_true',
@@ -109,12 +111,12 @@ def main():
     parser.add_argument(
         '--bbox-thr',
         type=float,
-        default=0.3,
-        help='Bounding box score threshold')
+        default=0.5,
+        help='Bounding box DETRHeadscore threshold')
     parser.add_argument(
         '--nms-thr',
         type=float,
-        default=0.3,
+        default=0.5,
         help='IoU threshold for bounding box NMS')
     parser.add_argument(
         '--kpt-thr',
@@ -140,7 +142,7 @@ def main():
     parser.add_argument(
         '--radius',
         type=int,
-        default=3,
+        default=1,
         help='Keypoint radius for visualization')
     parser.add_argument(
         '--thickness',
@@ -206,16 +208,29 @@ def main():
 
     if input_type == 'image':
 
-        # inference
-        pred_instances = process_one_image(args, args.input, detector,
-                                           pose_estimator, visualizer)
+        png_files = glob.glob(os.path.join("/home/hassaan/Documents/Hassaan/data/manipal_uav/Manipal-UAV-Person-Dataset/Test_Samples/", "*.png"))
+        for file_path in png_files:
+            output_file = os.path.join(args.output_root,
+                                       os.path.basename(file_path))
+            # inference
+            pred_instances = process_one_image(args, file_path, detector,
+                                               pose_estimator, visualizer)
+            if args.save_predictions:
+                pred_instances_list = split_instances(pred_instances)
+            if output_file:
+                img_vis = visualizer.get_image()
+                mmcv.imwrite(mmcv.rgb2bgr(img_vis), output_file)
 
-        if args.save_predictions:
-            pred_instances_list = split_instances(pred_instances)
-
-        if output_file:
-            img_vis = visualizer.get_image()
-            mmcv.imwrite(mmcv.rgb2bgr(img_vis), output_file)
+        # # inference
+        # pred_instances = process_one_image(args, args.input, detector,
+        #                                    pose_estimator, visualizer)
+        #
+        # if args.save_predictions:
+        #     pred_instances_list = split_instances(pred_instances)
+        #
+        # if output_file:
+        #     img_vis = visualizer.get_image()
+        #     mmcv.imwrite(mmcv.rgb2bgr(img_vis), output_file)
 
     elif input_type in ['webcam', 'video']:
 
